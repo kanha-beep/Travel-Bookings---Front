@@ -33,7 +33,6 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      navigate("/");
     } else {
       setIsLoggedIn(false);
     }
