@@ -53,9 +53,9 @@ export default function SingleSlots({
       {slots ? (
         <div key={slots._id}>
           <img
-            src={`${
-              import.meta.env.VITE_BACKEND_URL
-            }/uploads/${slots?.images.map((i) => i)}`}
+            src={`${import.meta.env.VITE_API_URL}/uploads/${slots?.images.map(
+              (i) => i
+            )}`}
           />
           <p>Name: {slots?.title}</p>
           <p>Owner: {slots?.owner?.name}</p>

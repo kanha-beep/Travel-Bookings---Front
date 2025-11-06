@@ -38,7 +38,7 @@ export default function ConfirmationPage({ user }) {
             details.images.map((image, index) => (
               <img
                 key={index}
-                src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${image}`}
+                src={`${import.meta.env.VITE_API_URL}/uploads/${image}`}
                 alt={`Image ${index + 1}`}
                 style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
