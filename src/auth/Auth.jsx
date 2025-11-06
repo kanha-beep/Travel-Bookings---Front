@@ -33,6 +33,7 @@ export default function Auth({
         localStorage.setItem("token", res?.data?.token);
         setIsLoggedIn(true);
         navigate("/all-slots");
+        return res;
       } else {
         const res = await api.post("/auth/user/register", formData);
         console.log("user registered in: ", res?.data);
@@ -40,6 +41,7 @@ export default function Auth({
         localStorage.setItem("token", res?.data?.token);
         setIsLoggedIn(true);
         navigate("/all-slots");
+        return res;
       }
     },
     setMsg,
@@ -129,7 +131,7 @@ export default function Auth({
                 />
               </>
             )}
-            <button>{isLogin ? "Login" : "Register"}</button>
+            <button type="submit">{isLogin ? "Login" : "Register"}</button>
             <Link onClick={() => setIsLogin(!isLogin)}>
               {isLogin ? "Create Account" : "Already a User"}
             </Link>
