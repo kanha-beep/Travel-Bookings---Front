@@ -16,6 +16,7 @@ import { WrapAsync } from "./utils/WrapAsync.js";
 import { api } from "./api.js";
 function App() {
   const [msg, setMsg] = useState("");
+  const [msgType, setMsgType] = useState("");
   const [user, setUser] = useState(null);
   useEffect(() => {
     const getUserDetails = WrapAsync(async () => {
@@ -39,7 +40,7 @@ function App() {
   }, []);
   return (
     <>
-      <Navbar navigate={navigate} />
+      <Navbar navigate={navigate} msg={msg} setMsg={setMsg} />
       <Routes>
         <Route
           path="/auth"
@@ -48,14 +49,25 @@ function App() {
               setIsLoggedIn={setIsLoggedIn}
               isLoggedIn={setIsLoggedIn}
               navigate={navigate}
+              msg={msg}
+              setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
         <Route
           path="/"
-          element={<Home navigate={navigate} user={user} />}
-          msg={msg}
-          setMsg={setMsg}
+          element={
+            <Home
+              navigate={navigate}
+              user={user}
+              msg={msg}
+              setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
+            />
+          }
         />
         <Route
           path="/dashboard"
@@ -66,6 +78,8 @@ function App() {
               user={user}
               msg={msg}
               setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
@@ -77,6 +91,8 @@ function App() {
               user={user}
               msg={msg}
               setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
@@ -88,6 +104,8 @@ function App() {
               user={user}
               msg={msg}
               setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
@@ -99,6 +117,8 @@ function App() {
               user={user}
               msg={msg}
               setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
@@ -110,22 +130,46 @@ function App() {
               user={user}
               msg={msg}
               setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
             />
           }
         />
         <Route
           path="/new-bookings"
           element={
-            <BookingsForm navigate={navigate} msg={msg} setMsg={setMsg} />
+            <BookingsForm
+              navigate={navigate}
+              msg={msg}
+              setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
+            />
           }
         />
         <Route
           path="/confirm"
-          element={<ConfirmationPage user={user} msg={msg} setMsg={setMsg} />}
+          element={
+            <ConfirmationPage
+              user={user}
+              msg={msg}
+              setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
+            />
+          }
         />
         <Route
           path="/profile"
-          element={<Profile user={user} msg={msg} setMsg={setMsg} />}
+          element={
+            <Profile
+              user={user}
+              msg={msg}
+              setMsg={setMsg}
+              msgType={msgType}
+              setMsgType={setMsgType}
+            />
+          }
         />
       </Routes>
     </>

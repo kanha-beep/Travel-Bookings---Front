@@ -3,7 +3,13 @@ import { useState } from "react";
 import { api } from "../api.js";
 import { WrapAsync } from "../utils/WrapAsync.js";
 
-export default function NewSlots({ navigate, msg, setMsg }) {
+export default function NewSlots({
+  navigate,
+  msg,
+  setMsg,
+  setMsgType,
+  msgType,
+}) {
   const [formData, setFormData] = useState({
     title: "",
     location: "",
@@ -21,29 +27,43 @@ export default function NewSlots({ navigate, msg, setMsg }) {
       setFormData((p) => ({ ...p, [name]: value }));
     }
   };
-  const handleSubmit = WrapAsync(async (e) => {
-    e.preventDefault();
-    // console.log("form data: ", formData);
-    const form = new FormData();
-    for (let key in formData) {
-      if (key === "images") {
-        formData.images.forEach((img) => form.append("images", img));
-      } else {
-        form.append(key, formData[key]);
+  const handleSubmit = WrapAsync(
+    async (e) => {
+      e.preventDefault();
+      // console.log("form data: ", formData);
+      const form = new FormData();
+      for (let key in formData) {
+        if (key === "images") {
+          formData.images.forEach((img) => form.append("images", img));
+        } else {
+          form.append(key, formData[key]);
+        }
       }
-    }
-    // console.log("new form: ", form);
-    const res = await api.post("/slots/new", form);
-    console.log("slot created: ", res?.data);
-    setMsg(res?.data?.message);
-    // navigate("/dashboard/user", { state: res?.data });
-    navigate("/confirm", {
-      state: { state: res?.data, msg },
-      role: res?.data?.role,
-    });
-  });
+      // console.log("new form: ", form);
+      const res = await api.post("/slots/new", form);
+      console.log("slot created: ", res?.data);
+      setMsg(res?.data?.message);
+      // navigate("/dashboard/user", { state: res?.data });
+      navigate("/confirm", {
+        state: { state: res?.data, msg },
+        role: res?.data?.role,
+      });
+    },
+    setMsg,
+    setMsgType
+  );
   return (
-    <div>
+    <div className="container">
+      {msg !== "" && msg.trim() && (
+        <div
+          className={`alert ${
+            msgType === "success" ? "alert-success" : "alert-danger"
+          }`}
+          role="alert"
+        >
+          {msg}
+        </div>
+      )}
       <h1>Add Slots</h1>
       <form onSubmit={handleSubmit}>
         <input

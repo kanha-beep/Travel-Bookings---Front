@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ msg, setMsg, setMsgType, msgType }) {
   const navigate = useNavigate();
   return (
     <div>
@@ -14,7 +14,7 @@ export default function Navbar() {
             <Link to="/" className="text-decoration-none ms-2">
               Home
             </Link>
-             <Link to="/profile" className="text-decoration-none ms-2">
+            <Link to="/profile" className="text-decoration-none ms-2">
               Profile
             </Link>
             <Link to="/all-slots" className="text-decoration-none ms-2">
@@ -23,7 +23,6 @@ export default function Navbar() {
             <Link to="/new-slots" className="text-decoration-none ms-2">
               New Slots
             </Link>
-
             <Link to="/new-bookings" className="text-decoration-none ms-2">
               New Bookings
             </Link>

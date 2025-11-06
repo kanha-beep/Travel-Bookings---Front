@@ -5,14 +5,20 @@ export default function ConfirmationPage({ user }) {
   console.log("user name who booked: ", user?.name);
   const navigate = useNavigate();
   const { state } = useLocation();
-  console.log(state?.msg);
+  const msg = state?.msg;
+  // console.log(state?.msg);
   const details = state?.state?.slots;
-  console.log("details", details, );
+  console.log("details", details);
   setTimeout(() => {
     navigate("/dashboard", { state: state?.role });
   }, 10000);
   return (
-    <>
+    <div className="container">
+      {msg && (
+        <p className="alert alert-success" role="alert">
+          {msg}
+        </p>
+      )}
       <h1>Confirmation Page</h1>
       {user?.role === "user" && (
         <div>
@@ -45,6 +51,6 @@ export default function ConfirmationPage({ user }) {
           <p>Location: {details?.location}</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

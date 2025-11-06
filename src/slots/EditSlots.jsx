@@ -5,7 +5,13 @@ import { api } from "../api";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export default function EditSlots({ navigate }) {
+export default function EditSlots({
+  navigate,
+  msg,
+  setMsg,
+  setMsgType,
+  msgType,
+}) {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     title: "",
@@ -17,11 +23,16 @@ export default function EditSlots({ navigate }) {
     number: "",
   });
   useEffect(() => {
-    const getSingleSlots = async () => {
-      const res = await api.get(`/slots/single-slots/${id}`);
-      // console.log("single slots: ", res?.data);
-      setFormData(res?.data?.slots);
-    };
+    const getSingleSlots = WrapAsync(
+      async () => {
+        const res = await api.get(`/slots/single-slots/${id}`);
+        // console.log("single slots: ", res?.data);
+        setFormData(res?.data?.slots);
+        return res;
+      },
+      setMsg,
+      setMsgType
+    );
     getSingleSlots();
   }, []);
   const handleChange = (e) => {
@@ -32,27 +43,42 @@ export default function EditSlots({ navigate }) {
       setFormData((p) => ({ ...p, [name]: value }));
     }
   };
-  const handleSubmit = WrapAsync(async (e) => {
-    e.preventDefault();
-    console.log("form data: ", formData);
-    const form = new FormData();
-    for (let key in formData) {
-      if (key === "images") {
-        formData.images.forEach((img) => form.append("images", img));
-      } else {
-        form.append(key, formData[key]);
+  const handleSubmit = WrapAsync(
+    async (e) => {
+      e.preventDefault();
+      console.log("form data: ", formData);
+      const form = new FormData();
+      for (let key in formData) {
+        if (key === "images") {
+          formData.images.forEach((img) => form.append("images", img));
+        } else {
+          form.append(key, formData[key]);
+        }
       }
-    }
-    // console.log("new form: ", form);
-    const res = await api.patch(`/slots/${id}/edit`, form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    console.log("slot updated: ", res?.data);
-    navigate("/dashboard", { state: res?.data, role: res?.data?.role });
-  });
+      // console.log("new form: ", form);
+      const res = await api.patch(`/slots/${id}/edit`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("slot updated: ", res?.data);
+      navigate("/dashboard", { state: res?.data, role: res?.data?.role });
+      return res;
+    },
+    setMsg,
+    setMsgType
+  );
   return (
     <div>
-      <div>
+      <div className="container">
+        {msg !== "" && msg.trim() && (
+          <h3
+            className={`alert ${
+              msgType === "success" ? "alert-success" : "alert-danger"
+            }`}
+            role="alert"
+          >
+            {msg}
+          </h3>
+        )}
         <h1>Edit Slots</h1>
         <form onSubmit={handleSubmit}>
           <input

@@ -3,17 +3,30 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../api.js";
 import { useState } from "react";
-export default function SingleSlots({ navigate, user }) {
+import { WrapAsync } from "../utils/WrapAsync.js";
+export default function SingleSlots({
+  navigate,
+  user,
+  msg,
+  setMsg,
+  setMsgType,
+  msgType,
+}) {
   // const [slotRole, setSlotRole] = useState("");
   const [slots, setSlots] = useState(null);
   const { id } = useParams();
   useEffect(() => {
-    const getSingleSlots = async () => {
-      const res = await api.get(`/slots/single-slots/${id}`);
-      console.log("single slots: ", res?.data);
-      setSlots(res?.data?.slots);
-      // setSlotRole(res?.data?.slots?.owner?.role);
-    };
+    const getSingleSlots = WrapAsync(
+      async () => {
+        const res = await api.get(`/slots/single-slots/${id}`);
+        console.log("single slots: ", res?.data);
+        setSlots(res?.data?.slots);
+        // setSlotRole(res?.data?.slots?.owner?.role);
+        return res;
+      },
+      setMsg,
+      setMsgType
+    );
     getSingleSlots();
   }, []);
   const handleDelete = async (id) => {
@@ -25,7 +38,17 @@ export default function SingleSlots({ navigate, user }) {
   console.log("user in single: ", user?.role);
   console.log("role single slots: ", user?.role);
   return (
-    <div>
+    <div className="container">
+      {msg !== "" && msg.trim() && (
+        <p
+          className={`alert ${
+            msgType === "success" ? "alert-success" : "alert-danger"
+          }`}
+          role="alert"
+        >
+          {msg}
+        </p>
+      )}
       <h1>Single Slot</h1>
       {slots ? (
         <div key={slots._id}>
