@@ -52,7 +52,11 @@ export default function SingleSlots({
       <h1>Single Slot</h1>
       {slots ? (
         <div key={slots._id}>
-          src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${slots?.images.map((i) => i)}`}
+          <img
+            src={`${
+              import.meta.env.VITE_BACKEND_URL
+            }/uploads/${slots?.images.map((i) => i)}`}
+          />
           <p>Name: {slots?.title}</p>
           <p>Owner: {slots?.owner?.name}</p>
           <p>Description: {slots?.description}</p>
