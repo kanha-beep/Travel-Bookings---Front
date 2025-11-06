@@ -44,7 +44,7 @@ export default function BookingsForm({
   return (
     <div>
       <div className="container">
-        {msg !== "" && msg.trim() && (
+        {msg && typeof msg === "string" && msg.trim() !== "" && (
           <h2
             className={`alert ${
               msgType === "success" ? "alert-success" : "alert-danger"

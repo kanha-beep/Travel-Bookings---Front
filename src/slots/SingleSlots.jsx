@@ -39,7 +39,7 @@ export default function SingleSlots({
   console.log("role single slots: ", user?.role);
   return (
     <div className="container">
-      {msg !== "" && msg.trim() && (
+      {msg && typeof msg === "string" && msg.trim() !== "" && (
         <p
           className={`alert ${
             msgType === "success" ? "alert-success" : "alert-danger"

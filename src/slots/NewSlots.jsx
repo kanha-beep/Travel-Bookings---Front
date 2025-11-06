@@ -54,7 +54,7 @@ export default function NewSlots({
   );
   return (
     <div className="container">
-      {msg !== "" && msg.trim() && (
+      {msg && typeof msg === "string" && msg.trim() !== "" && (
         <div
           className={`alert ${
             msgType === "success" ? "alert-success" : "alert-danger"

@@ -4,7 +4,7 @@ export default function Home({ msg, setMsg, setMsgType }) {
   return (
     <div>
       <div className="container">
-        {msg !== "" && msg.trim() && (
+        {msg && typeof msg === "string" && msg.trim() !== "" && (
           <h3 className="alert alert-success" role="alert">
             {msg}
           </h3>

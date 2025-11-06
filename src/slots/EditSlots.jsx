@@ -69,7 +69,7 @@ export default function EditSlots({
   return (
     <div>
       <div className="container">
-        {msg !== "" && msg.trim() && (
+        {msg && typeof msg === "string" && msg.trim() !== "" && (
           <h3
             className={`alert ${
               msgType === "success" ? "alert-success" : "alert-danger"

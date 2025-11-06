@@ -43,7 +43,7 @@ export default function Dashboard({ user, msg, setMsg, setMsgType, msgType }) {
 
   return (
     <div>
-      {msg && msg.trim() !== "" && (
+      {msg && typeof msg === "string" && msg.trim() !== "" && (
         <div
           className={`alert ${
             msgType === "success" ? "alert-success" : "alert-danger"

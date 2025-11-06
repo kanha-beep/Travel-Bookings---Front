@@ -77,7 +77,7 @@ export default function Auth({
   return (
     <div>
       <div className="container">
-        {msg !== "" && msg.trim() && (
+        {msg && typeof msg === "string" && msg.trim() !== "" && (
           <h1
             className={`alert ${
               msgType === "success" ? "alert-success" : "alert-danger"
