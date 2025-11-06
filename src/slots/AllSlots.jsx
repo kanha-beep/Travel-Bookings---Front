@@ -40,7 +40,9 @@ export default function AllSlots({ msg, setMsg, setMsgType, msgType }) {
                 <div key={slot._id}>
                   {slot?.images?.length > 0 && (
                     <img
-                      src={`${import.meta.env.VITE_API_URL}/uploads/${image}`}
+                      src={`${import.meta.env.VITE_API_URL}/uploads/${
+                        slot.images[0]
+                      }`}
                       alt="coming"
                       className="card-img-top"
                     />
