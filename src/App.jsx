@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     const getUserDetails = WrapAsync(async () => {
       const res = await api.get("/auth/me");
-      console.log("user details: ", res?.data);
+      // console.log("user details: ", res?.data);
       setUser(res?.data?.user);
     });
     getUserDetails();
@@ -39,7 +39,7 @@ function App() {
   }, []);
   return (
     <>
-      <Navbar navigate={navigate} msg={msg} setMsg={setMsg} />
+      <Navbar />
       <Routes>
         <Route
           path="/auth"

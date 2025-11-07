@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Link } from "react-router-dom";
-
-export default function Home({ msg, setMsg, setMsgType, user, navigate }) {
+export default function Home({ msg, setMsg, user, navigate }) {
   return (
     <div>
       {msg && typeof msg === "string" && msg.trim() !== "" && (

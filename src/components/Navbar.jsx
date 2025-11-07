@@ -7,12 +7,39 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-    setIsLoggedIn(!!token);
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
+      setIsLoggedIn(!!token);
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (e) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkAuthStatus();
+    window.addEventListener("focus", checkAuthStatus);
+
+    // Close dropdowns when clicking outside
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+          menu.classList.remove("show");
+        });
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      window.removeEventListener("focus", checkAuthStatus);
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -20,7 +47,34 @@ export default function Navbar() {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUser(null);
-    navigate("/auth");
+    navigate("/");
+  };
+
+  const toggleNavbar = () => {
+    const navbar = document.getElementById("navbarNav");
+    const button = document.querySelector(".navbar-toggler");
+    if (navbar.classList.contains("show")) {
+      navbar.classList.remove("show");
+      button.setAttribute("aria-expanded", "false");
+    } else {
+      navbar.classList.add("show");
+      button.setAttribute("aria-expanded", "true");
+    }
+  };
+
+  const toggleDropdown = (dropdownId) => {
+    const dropdown = document.getElementById(dropdownId);
+    const isOpen = dropdown.classList.contains("show");
+
+    // Close all dropdowns first
+    document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+      menu.classList.remove("show");
+    });
+
+    // Toggle current dropdown
+    if (!isOpen) {
+      dropdown.classList.add("show");
+    }
   };
 
   return (
@@ -30,16 +84,17 @@ export default function Navbar() {
           <i className="fas fa-plane me-2"></i>
           Travel Booking
         </Link>
-        
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
+        <button
+          className="navbar-toggler"
+          type="button"
+          onClick={toggleNavbar}
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
@@ -69,29 +124,45 @@ export default function Navbar() {
                     <i className="fas fa-user me-1"></i>Profile
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={handleLogout}
+                  >
+                    <i className="fas fa-sign-out-alt me-2"></i>Logout
+                  </button>
+                </li>
               </>
             )}
           </ul>
-          
+
           <ul className="navbar-nav">
             {!isLoggedIn ? (
               <>
                 <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDropdown("loginDropdown");
+                    }}
+                  >
                     <i className="fas fa-sign-in-alt me-1"></i>Login
                   </a>
-                  <ul className="dropdown-menu">
+                  <ul className="dropdown-menu" id="loginDropdown">
                     <li>
-                      <button 
-                        className="dropdown-item" 
+                      <button
+                        className="dropdown-item"
                         onClick={() => navigate(`/auth`, { state: "user" })}
                       >
                         <i className="fas fa-user me-2"></i>User Login
                       </button>
                     </li>
                     <li>
-                      <button 
-                        className="dropdown-item" 
+                      <button
+                        className="dropdown-item"
                         onClick={() => navigate(`/auth`, { state: "owner" })}
                       >
                         <i className="fas fa-building me-2"></i>Owner Login
@@ -100,21 +171,29 @@ export default function Navbar() {
                   </ul>
                 </li>
                 <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDropdown("registerDropdown");
+                    }}
+                  >
                     <i className="fas fa-user-plus me-1"></i>Register
                   </a>
-                  <ul className="dropdown-menu">
+                  <ul className="dropdown-menu" id="registerDropdown">
                     <li>
-                      <button 
-                        className="dropdown-item" 
+                      <button
+                        className="dropdown-item"
                         onClick={() => navigate(`/auth`, { state: "user" })}
                       >
                         <i className="fas fa-user me-2"></i>User Register
                       </button>
                     </li>
                     <li>
-                      <button 
-                        className="dropdown-item" 
+                      <button
+                        className="dropdown-item"
                         onClick={() => navigate(`/auth`, { state: "owner" })}
                       >
                         <i className="fas fa-building me-2"></i>Owner Register
@@ -125,19 +204,32 @@ export default function Navbar() {
               </>
             ) : (
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleDropdown("userDropdown");
+                  }}
+                >
                   <i className="fas fa-user-circle me-1"></i>
-                  {user?.name || 'User'}
+                  {user?.name || "User"}
                 </a>
-                <ul className="dropdown-menu">
+                <ul className="dropdown-menu" id="userDropdown">
                   <li>
                     <Link className="dropdown-item" to="/profile">
                       <i className="fas fa-user me-2"></i>Profile
                     </Link>
                   </li>
-                  <li><hr className="dropdown-divider" /></li>
                   <li>
-                    <button className="dropdown-item text-danger" onClick={handleLogout}>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item text-danger"
+                      onClick={handleLogout}
+                    >
                       <i className="fas fa-sign-out-alt me-2"></i>Logout
                     </button>
                   </li>
